@@ -12,25 +12,12 @@ services:
 
     inmanta-server:
         container_name: inmanta_orchestrator
-        image: ghcr.io/inmanta/orchestrator:dev
-        volumes:
-            - ./data:/var/lib/inmanta
+        image: ghcr.io/edvgui/inmanta-vscode:latest
+        build: ./build
         networks:
             inm_net:
                 ipv4_address: 172.30.0.3
         command: "server --wait-for-host inmanta_db --wait-for-port 5432"
-
-    vscode-server:
-        container_name: vscode
-        image: codercom/code-server:latest
-        volumes:
-            - ./data:/home/coder/project
-        user: 997:995
-        environment:
-            DOCKER_USER: inmanta
-        networks:
-            inm_net:
-                ipv4_address: 172.30.0.4
 
 networks:
     inm_net:
