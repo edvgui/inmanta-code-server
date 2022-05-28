@@ -33,4 +33,4 @@ USER inmanta
 
 # Overwrite the entrypoint to first start the code server, then use the entrypoint from
 # the base container image
-ENTRYPOINT ["/usr/bin/bash", "-c", "sudo -u inmanta code-server & /container-entrypoint-with-env $@", ""]
+ENTRYPOINT ["/usr/bin/bash", "-c", "sudo chown -R inmanta:inmanta /var/lib/inmanta; sudo -u inmanta code-server & /container-entrypoint-with-env $@", ""]

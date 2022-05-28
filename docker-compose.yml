@@ -14,6 +14,9 @@ services:
         container_name: inmanta_orchestrator
         image: ghcr.io/edvgui/inmanta-vscode:latest
         build: ./build
+        volumes:
+            - ./build/resources/code-server-config.yml:/var/lib/inmanta/.config/code-server/config.yaml
+            - ./build/resources/code-server-settings.json:/var/lib/inmanta/.local/share/code-server/User/settings.json
         networks:
             inm_net:
                 ipv4_address: 172.30.0.3
