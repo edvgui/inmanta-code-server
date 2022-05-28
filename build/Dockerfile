@@ -11,17 +11,22 @@ RUN cd /opt && \
     chmod +x install.sh && \
     ./install.sh
 
-# Install the python extension
-RUN sudo -u inmanta code-server --install-extension ms-python.python
-
-# Install the inmanta extesion (to be fixed)
-RUN mkdir -p /var/lib/inmanta/.local/share/code-server/extensions && \
-    cd /var/lib/inmanta/.local/share/code-server/extensions && \
-    git clone https://github.com/inmanta/vscode-inmanta.git inmanta.inmanta-dev && \
-    chown -R inmanta:inmanta /var/lib/inmanta
+# Build and install the inmanta vscode extension
+RUN cd /tmp && \
+    git clone https://github.com/inmanta/vscode-inmanta.git && \
+    chown -R inmanta:inmanta vscode-inmanta && \
+    cd vscode-inmanta && \
+    sudo -u inmanta npm i vsce && \
+    sudo -u inmanta npx vsce package && \
+    sudo -u inmanta code-server --install-extension inmanta-*.vsix && \
+    cd /tmp && \
+    rm -rf vscode-inmanta
 
 # Copy the startup confguration where code-server will pick it up
 COPY ./resources/code-server-config.yml /var/lib/inmanta/.config/code-server/config.yaml
+
+# Copy the vscode settings file in place
+COPY ./resources/code-server-settings.json /var/lib/inmanta/.local/share/code-server/User/settings.json
 
 # Setting the user back to what is was
 USER inmanta
